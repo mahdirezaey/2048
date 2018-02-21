@@ -1,24 +1,10 @@
-
-// Error  ha + insert aza ye for to paraleling dar vec_val_mojood
-
-
 #include<string>
 #include<vector>
 #include<algorithm>
 #include<iostream>
-//#include<stdlib.h>
 
 using namespace std;
-/*
-bool Isalpha(char ch)
-{
-    char i;
-    for( i= 'A' ;i <= 'z' ; i++)
-        if(ch == i)
-            return 1;
-    return 0;
-}
-*/
+
 bool vojood_moteghaier(char ch , const vector<char> &vec_val_mojood)
 {
     //static vector<char> vec_char;
@@ -50,7 +36,7 @@ void values_saz(vector<int> &values , string dastor)
             values.push_back(dastor[k]);
 }
 
-int ja_yab_chap_tasavi (char ch  , vector<vector<int> > &index_marahel ,vector<string> &vec_dastorat_avalie )
+int ja_yab_chap_tasavi (char ch  ,const vector<vector<int> > &index_marahel ,const vector<string> &vec_dastorat_avalie )
 {
     // enghadr bere ta samt chap =  ch bashe bad inex ye khone badish ro bargar done/
     for(int i=index_marahel.size()-1; i>=0 ;i--)
@@ -68,17 +54,7 @@ int ja_yab_chap_tasavi (char ch  , vector<vector<int> > &index_marahel ,vector<s
 
     return index_marahel.size();
 }
-/*
-int Min(vector<int> &ja_array_marhale)
-{
-    int min=ja_array_marhale[0];
 
-    for(int i=1;i<ja_array_marhale.size();i++)
-        if(min>ja_array_marhale[i])
-            min=i;
-    return min;
-}
-*/
 int paralleling (const vector<string> &vec_dastorat_avalie )
 {
     vector<vector<int> > index_marahel;
@@ -95,7 +71,7 @@ int paralleling (const vector<string> &vec_dastorat_avalie )
            likely_place_in_vvm.push_back(ja_yab_chap_tasavi(vec_dastorat_avalie[i][0] ,index_marahel,vec_dastorat_avalie) );
 
         for(int j=2 ;j<vec_dastorat_avalie[i].size();j++)
-        {            
+        {
             if( isalpha( vec_dastorat_avalie[i][j]) == 1  && vojood_moteghaier(vec_dastorat_avalie[i][j] , vec_val_mojood) ==1 )   // moshkel dare !!
                 likely_place_in_vvm.push_back(ja_yab_rast_tasavi(vec_dastorat_avalie[i][j] , index_marahel,vec_dastorat_avalie ));  //  doroste in ja ??
 
@@ -105,7 +81,8 @@ int paralleling (const vector<string> &vec_dastorat_avalie )
 
         }
 
-        int index= max_element(likely_place_in_vvm.begin(),likely_place_in_vvm.end());
+        //int index= max_element(likely_place_in_vvm.begin(),likely_place_in_vvm.end());
+        int index = *std::max_element( likely_place_in_vvm.begin(), likely_place_in_vvm.end() );
         if(index > index_marahel.size())
         {
             vector<int> vec_Empty;
@@ -149,10 +126,9 @@ int main()
         cin>>s;
     }
 
-    paralleling(vec_dastorat_avalie);
+    int tedad_marahel = paralleling(vec_dastorat_avalie);
 
-    //cout<< vec_str[0][0];
-
+    cout<< tedad_marahel;
 
 
     return 0;
