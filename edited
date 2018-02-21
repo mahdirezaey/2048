@@ -1,0 +1,159 @@
+
+// Error  ha + insert aza ye for to paraleling dar vec_val_mojood
+
+
+#include<string>
+#include<vector>
+#include<algorithm>
+#include<iostream>
+//#include<stdlib.h>
+
+using namespace std;
+/*
+bool Isalpha(char ch)
+{
+    char i;
+    for( i= 'A' ;i <= 'z' ; i++)
+        if(ch == i)
+            return 1;
+    return 0;
+}
+*/
+bool vojood_moteghaier(char ch , const vector<char> &vec_val_mojood)
+{
+    //static vector<char> vec_char;
+
+    for(int i=0;i<vec_val_mojood.size();i++)
+        if(vec_val_mojood[i] == ch)
+            return true;
+    return false;
+}
+
+int ja_yab_rast_tasavi (char ch  ,const vector<vector<int> > &index_marahel ,const vector<string> &vec_dastorat_avalie )
+{
+    // enghadr bere ta samt chap =  ch bashe bad inex ye khone badish ro bargar done/
+    for(int i=index_marahel.size(); i>0 ;i--)
+    {
+        for(int j=0 ;j<index_marahel[i].size();j++)
+            if(vec_dastorat_avalie[ index_marahel[i][j] ][0] == 'ch')
+                return i+1;
+
+    }
+
+    return index_marahel.size();
+}
+
+void values_saz(vector<int> &values , string dastor)
+{
+    for(int k=0 ;k<dastor.size();k++)
+        if(isalpha(dastor[k]) == 1 )
+            values.push_back(dastor[k]);
+}
+
+int ja_yab_chap_tasavi (char ch  , vector<vector<int> > &index_marahel ,vector<string> &vec_dastorat_avalie )
+{
+    // enghadr bere ta samt chap =  ch bashe bad inex ye khone badish ro bargar done/
+    for(int i=index_marahel.size()-1; i>=0 ;i--)
+    {
+        for(int j=0 ;j<index_marahel[i].size();j++)
+        {
+            vector<int> values;
+            values_saz(values , vec_dastorat_avalie[index_marahel[i][j]] );
+
+            for(int k=0 ;k<values.size();k++)
+                if(values[k] == ch)
+                    return i+1;
+        }
+    }
+
+    return index_marahel.size();
+}
+/*
+int Min(vector<int> &ja_array_marhale)
+{
+    int min=ja_array_marhale[0];
+
+    for(int i=1;i<ja_array_marhale.size();i++)
+        if(min>ja_array_marhale[i])
+            min=i;
+    return min;
+}
+*/
+int paralleling (const vector<string> &vec_dastorat_avalie )
+{
+    vector<vector<int> > index_marahel;
+    vector<char> vec_val_mojood; // value ha ke mo jood bodan ta ghabl oon marhale
+
+    for(int i= 0 ; i < vec_dastorat_avalie.size() ; i++)
+    {
+        vector<int> likely_place_in_vvm; // chanta ja mirizim to in akhar sar max ro barmidarim
+
+        //to in halat(khat badi) baiad avalin dastor ejra she
+        if(vojood_moteghaier(vec_dastorat_avalie[i][0] , vec_val_mojood) == 0)
+            likely_place_in_vvm.push_back(0);
+        else
+           likely_place_in_vvm.push_back(ja_yab_chap_tasavi(vec_dastorat_avalie[i][0] ,index_marahel,vec_dastorat_avalie) );
+
+        for(int j=2 ;j<vec_dastorat_avalie[i].size();j++)
+        {            
+            if( isalpha( vec_dastorat_avalie[i][j]) == 1  && vojood_moteghaier(vec_dastorat_avalie[i][j] , vec_val_mojood) ==1 )   // moshkel dare !!
+                likely_place_in_vvm.push_back(ja_yab_rast_tasavi(vec_dastorat_avalie[i][j] , index_marahel,vec_dastorat_avalie ));  //  doroste in ja ??
+
+            //to in halat(khat badi) baiad avalin dastor ejra she
+            else if(isalpha( vec_dastorat_avalie[i][j]) == 1)
+                likely_place_in_vvm.push_back(0);
+
+        }
+
+        int index= max_element(likely_place_in_vvm.begin(),likely_place_in_vvm.end());
+        if(index > index_marahel.size())
+        {
+            vector<int> vec_Empty;
+            index_marahel.push_back(vec_Empty);
+        }
+        index_marahel[index].push_back(i);
+
+        for(int j=0 ; j < vec_dastorat_avalie[i].size();j++)
+        {
+            if(isalpha(vec_dastorat_avalie[i][j]) == 1 && find(vec_val_mojood.begin(),vec_val_mojood.end(),vec_dastorat_avalie[i][j]) == vec_val_mojood.end() )
+                vec_val_mojood.push_back(vec_dastorat_avalie[i][j]);
+        }
+    }
+
+    return (index_marahel.size() );
+}
+
+
+int main()
+{
+    vector<string> vec_dastorat_avalie;
+    string s;
+
+    //std::vector<std::vector<int> > twoDimVector(3, std::vector<int>(2, 0));
+
+    //string sharp = "";
+    //char ch ='abc';
+    //cout<<ch;
+    //vector<vector<int> > array_marhale(3,vector<int> (2));
+    //cout<<twoDimVector.size();
+
+    //vec_dastorat_avalie.push_back("Oops!");
+
+    //cout<<vec_str.size();
+
+    cin>>s;
+
+    while(s != "#")
+    {
+        vec_dastorat_avalie.push_back(s);
+        cin>>s;
+    }
+
+    paralleling(vec_dastorat_avalie);
+
+    //cout<< vec_str[0][0];
+
+
+
+    return 0;
+}
